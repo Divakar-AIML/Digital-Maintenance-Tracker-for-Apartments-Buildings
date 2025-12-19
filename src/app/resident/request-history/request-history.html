@@ -1,0 +1,47 @@
+<div class="history-container">
+  <div class="content-wrapper">
+    <h2>🔧 Maintenance Request History</h2>
+
+    <div *ngIf="loading" class="loading-text">
+      <p>⏳ Loading your requests...</p>
+    </div>
+
+    <div *ngIf="!loading">
+      <div class="stats">
+        📊 Total Requests: {{ requests.length }}
+      </div>
+      
+      <div *ngIf="requests.length > 0; else noData">
+        <table>
+          <thead>
+            <tr>
+              <th>🏷️ Category</th>
+              <th>📝 Description</th>
+              <th>📅 Date</th>
+              <th>⚡ Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of requests">
+              <td>{{ r.category }}</td>
+              <td>{{ r.description }}</td>
+              <td>{{ r.created_at | date:'short' }}</td>
+              <td>
+                <span class="status" [ngClass]="getStatusClass(r.status)">
+                  {{ r.status || 'Pending' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noData>
+        <div class="no-data">
+          <p>📭 No maintenance requests found.</p>
+          <p>Start by creating your first request!</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

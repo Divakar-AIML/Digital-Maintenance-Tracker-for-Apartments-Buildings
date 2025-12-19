@@ -1,0 +1,16 @@
+<h2>Maintenance Request</h2>
+
+<form (ngSubmit)="submit()">
+  <label>Category</label>
+  <select [(ngModel)]="category" name="category" required>
+    <option value="">Select</option>
+    <option value="Electrical">Electrical</option>
+    <option value="Plumbing">Plumbing</option>
+    <option value="Cleaning">Cleaning</option>
+  </select>
+
+  <label>Description</label>
+  <textarea [(ngModel)]="description" name="description" required></textarea>
+
+  <button type="submit">Submit</button>
+</form>
