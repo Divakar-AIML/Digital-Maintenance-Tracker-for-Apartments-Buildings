@@ -1,45 +1,115 @@
 <div class="history-container">
-  <div class="content-wrapper">
-    <h2>🔧 Maintenance Request History</h2>
+  <div class="content-wrapper animate-fade-in-up">
+    <div class="header-section">
+      <div class="title-wrapper">
+        <div class="icon-wrapper">
+          <svg class="main-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <h1 class="main-title gradient-text">Request History</h1>
+      </div>
+      <p class="subtitle">Track and monitor all your maintenance requests</p>
+    </div>
 
-    <div *ngIf="loading" class="loading-text">
-      <p>⏳ Loading your requests...</p>
+    <div *ngIf="loading" class="loading-section">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading your request history...</p>
     </div>
 
     <div *ngIf="!loading">
-      <div class="stats">
-        📊 Total Requests: {{ requests.length }}
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ requests.length }}</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ getCompletedCount() }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ getPendingCount() }}</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ getInProgressCount() }}</div>
+          <div class="stat-label">In Progress</div>
+        </div>
       </div>
       
       <div *ngIf="requests.length > 0; else noData">
-        <table>
-          <thead>
-            <tr>
-              <th>🏷️ Category</th>
-              <th>📝 Description</th>
-              <th>📅 Date</th>
-              <th>⚡ Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let r of requests">
-              <td>{{ r.category }}</td>
-              <td>{{ r.description }}</td>
-              <td>{{ r.created_at | date:'short' }}</td>
-              <td>
-                <span class="status" [ngClass]="getStatusClass(r.status)">
-                  {{ r.status || 'Pending' }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Date Submitted</th>
+                <th>Priority</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of requests; trackBy: trackByRequestId">
+                <td>
+                  <div class="category-badge">
+                    <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+                      <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    <span>{{ r.category }}</span>
+                  </div>
+                </td>
+                <td class="description-cell" [title]="r.description">
+                  {{ r.description }}
+                </td>
+                <td class="date-cell">
+                  {{ r.created_at | date:'MMM dd, yyyy' }}<br>
+                  <small>{{ r.created_at | date:'h:mm a' }}</small>
+                </td>
+                <td>
+                  <span class="status priority" [ngClass]="getPriorityClass(r.priority)">
+                    <span class="status-dot"></span>
+                    {{ r.priority || 'Medium' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status" [ngClass]="getStatusClass(r.status)">
+                    <span class="status-dot"></span>
+                    {{ r.status || 'Pending' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <ng-template #noData>
-        <div class="no-data">
-          <p>📭 No maintenance requests found.</p>
-          <p>Start by creating your first request!</p>
+        <div class="empty-state">
+          <div class="empty-icon-wrapper">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+            </svg>
+          </div>
+          <h3 class="empty-title">No Maintenance Requests Yet</h3>
+          <p class="empty-description">
+            You haven't submitted any maintenance requests yet. 
+            Start by creating your first request to track issues in your apartment.
+          </p>
+          <div class="action-buttons">
+            <a routerLink="/new-request" class="btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Create First Request
+            </a>
+          </div>
         </div>
       </ng-template>
     </div>

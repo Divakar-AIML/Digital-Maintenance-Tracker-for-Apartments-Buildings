@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MaintenanceService } from '../../services/maintenance.service';
 
 @Component({
   selector: 'app-request-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './request-history.html',
   styleUrls: ['./request-history.css']
 })
@@ -55,5 +56,38 @@ export class RequestHistoryComponent implements OnInit {
   getStatusClass(status: string): string {
     if (!status) return 'pending';
     return status.toLowerCase().replace(' ', '-');
+  }
+
+  getPriorityClass(priority: string): string {
+    if (!priority) return 'medium';
+    return priority.toLowerCase();
+  }
+
+  getCompletedCount(): number {
+    return this.requests.filter(r => r.status?.toLowerCase() === 'completed').length;
+  }
+
+  getPendingCount(): number {
+    return this.requests.filter(r => !r.status || r.status.toLowerCase() === 'pending').length;
+  }
+
+  getInProgressCount(): number {
+    return this.requests.filter(r => r.status?.toLowerCase() === 'in-progress').length;
+  }
+
+  getCategoryIcon(category: string): string {
+    return category || 'Other';
+  }
+
+  getStatusIcon(status: string): string {
+    return status || 'Pending';
+  }
+
+  getPriorityIcon(priority: string): string {
+    return priority || 'Medium';
+  }
+
+  trackByRequestId(index: number, request: any): any {
+    return request.id || index;
   }
 }

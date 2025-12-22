@@ -1,16 +1,182 @@
-<h2>Maintenance Request</h2>
+<div class="request-container">
+  <div class="content-wrapper animate-fade-in-up">
+    <div class="header-section">
+      <div class="title-wrapper">
+        <div class="icon-wrapper">
+          <svg class="main-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10,9 9,9 8,9"/>
+          </svg>
+        </div>
+        <h1 class="main-title gradient-text">New Maintenance Request</h1>
+      </div>
+      <p class="subtitle">Submit your apartment maintenance request with detailed information</p>
+    </div>
 
-<form (ngSubmit)="submit()">
-  <label>Category</label>
-  <select [(ngModel)]="category" name="category" required>
-    <option value="">Select</option>
-    <option value="Electrical">Electrical</option>
-    <option value="Plumbing">Plumbing</option>
-    <option value="Cleaning">Cleaning</option>
-  </select>
+    <form (ngSubmit)="submit()" class="request-form">
+      <div class="form-grid">
+        <div class="form-group animate-slide-in-right">
+          <label class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+            <span>Request Category</span>
+          </label>
+          <div class="select-wrapper">
+            <select [(ngModel)]="category" name="category" required class="form-select">
+              <option value="" disabled>Choose a category...</option>
+              <option value="Electrical">Electrical Issues</option>
+              <option value="Plumbing">Plumbing & Water</option>
+              <option value="HVAC">Heating & Cooling</option>
+              <option value="Cleaning">Cleaning Services</option>
+              <option value="Appliances">Appliance Repair</option>
+              <option value="Security">Security & Access</option>
+              <option value="Structural">Structural Issues</option>
+              <option value="Other">Other Maintenance</option>
+            </select>
+          </div>
+        </div>
 
-  <label>Description</label>
-  <textarea [(ngModel)]="description" name="description" required></textarea>
+        <div class="form-group animate-slide-in-right" style="animation-delay: 0.1s;">
+          <label class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </svg>
+            <span>Detailed Description</span>
+          </label>
+          <textarea 
+            [(ngModel)]="description" 
+            name="description" 
+            required 
+            class="form-textarea"
+            placeholder="Please describe the issue in detail. Include location (e.g., Kitchen sink, Living room outlet, etc.) and any relevant information that will help our maintenance team..."
+            rows="6">
+          </textarea>
+        </div>
 
-  <button type="submit">Submit</button>
-</form>
+        <div class="form-group animate-slide-in-right" style="animation-delay: 0.15s;">
+          <label class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21,15 16,10 5,21"/>
+            </svg>
+            <span>Upload Image (Optional)</span>
+          </label>
+          <div class="file-upload-area" [class.has-file]="selectedFile">
+            <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+            <div *ngIf="!selectedFile" class="upload-placeholder">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <p class="upload-text">Click to upload or drag and drop</p>
+              <p class="upload-subtext">PNG, JPG up to 10MB</p>
+            </div>
+            <div *ngIf="selectedFile" class="file-preview">
+              <img [src]="imagePreview" alt="Preview" class="preview-image">
+              <div class="file-info">
+                <p class="file-name">{{ selectedFile.name }}</p>
+                <button type="button" class="remove-btn" (click)="removeImage()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group animate-slide-in-right" style="animation-delay: 0.2s;">
+          <label class="form-label">
+            <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+            </svg>
+            <span>Priority Level</span>
+          </label>
+          <div class="priority-options">
+            <label class="priority-option">
+              <input type="radio" [(ngModel)]="priority" name="priority" value="Low" class="priority-radio">
+              <span class="priority-label low">
+                <span class="priority-dot"></span>
+                Low Priority
+              </span>
+            </label>
+            <label class="priority-option">
+              <input type="radio" [(ngModel)]="priority" name="priority" value="Medium" class="priority-radio">
+              <span class="priority-label medium">
+                <span class="priority-dot"></span>
+                Medium Priority
+              </span>
+            </label>
+            <label class="priority-option">
+              <input type="radio" [(ngModel)]="priority" name="priority" value="High" class="priority-radio">
+              <span class="priority-label high">
+                <span class="priority-dot"></span>
+                High Priority
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions animate-fade-in-up" style="animation-delay: 0.3s;">
+        <button type="button" class="btn-secondary" (click)="resetForm()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="1,4 1,10 7,10"/>
+            <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+          </svg>
+          Reset Form
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="!category || !description">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+          </svg>
+          Submit Request
+        </button>
+      </div>
+    </form>
+
+    <div class="info-cards animate-fade-in-up" style="animation-delay: 0.4s;">
+      <div class="info-card">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        <h3>Quick Response</h3>
+        <p>Most requests are acknowledged within 2 hours</p>
+      </div>
+      <div class="info-card">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <h3>Expert Team</h3>
+        <p>Certified maintenance professionals</p>
+      </div>
+      <div class="info-card">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M9 12l2 2 4-4"/>
+          <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+          <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+          <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+          <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+        </svg>
+        <h3>Track Progress</h3>
+        <p>Monitor your request status in real-time</p>
+      </div>
+    </div>
+  </div>
+</div>
